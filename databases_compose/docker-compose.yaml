@@ -1,0 +1,61 @@
+services: 
+# Database MySQL DB relationnelle
+  mysql-db:
+    hostname: mysql-db
+    container_name: mysql-db
+    image: mysql:latest
+    restart: always
+    env_file:
+      - ../env/private.env
+    ports:
+      - "3306:3306" # "3307:3306"
+    volumes:
+      - mysql-db-data:/var/lib/mysql
+    networks:
+      - airflow_default
+  
+# Database Mongo DB non relationnelle
+  mongo-db:
+    container_name: mongo-db 
+    image: mongo:latest
+    restart: always
+    env_file:
+      - ../env/private.env
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db # endroit où les données de MongoDB sont stockées par défaut
+      - mongo-config:/data/configdb
+    networks:
+      - airflow_default 
+
+# Volumes pour nos données
+volumes:
+  mysql-db-data: {}
+  mongo-data: {}
+  mongo-config: {}
+
+networks:
+  airflow_default:  # Référence le réseau
+    external: true
+
+
+#   mongo-data: 
+#   mongo-config:
+
+
+# Pour accéder à nos DB :
+# MySQL
+# docker exec -it flights-db mysql -u sanou -p
+# MongoDB
+# docker exec -it weather-db mongo
+# mongosh --host localhost --port 27018
+
+# Pour supprimer tous les volumes utilisés par nos Dockers :
+# docker volume prune  
+# docker volume rm $(docker volume ls -q)
+
+# Pour supprimer toute trace de nos compartiments Docker :
+# docker rm $(docker ps -a -q)
+
+# BIEN JOUE LES GARS

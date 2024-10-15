@@ -1,0 +1,24 @@
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: {{ .Release.Name }}-ingress
+#   namespace: {{ .Values.namespace }}
+#   annotations:
+#     cert-manager.io/cluster-issuer: letsencrypt-prod
+# spec:
+#   ingressClassName: traefik
+#   tls:
+#     - secretName: {{ .Values.tls.secretName }}
+#       hosts:
+#         - {{ .Values.tls.hosts }}
+#   rules:
+#     - host: {{ .Values.tls.hosts }}
+#       http:
+#         paths:
+#           - path: /
+#             pathType: Prefix
+#             backend:
+#               service:
+#                 name: {{ .Values.service.name }}
+#                 port:
+#                   number: {{ .Values.service.port }}

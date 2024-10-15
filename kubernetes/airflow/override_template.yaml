@@ -1,0 +1,87 @@
+images:
+  airflow:
+    repository: "glampe/dst_airlines_custom_airflow"
+    tag: "0.1.1"
+
+dags:
+  persistence:
+    enabled: false
+    # existingClaim: "airflow-pvc-dags"
+  gitSync:
+    enabled: true
+    repo: "git@github.com:dts-bgm/DST-Airlines.git"
+    branch: "main"
+    subPath: "./airflow/dags/"
+    sshKeySecret: "airflow-ssh-secret"
+
+logs:
+  persistence:
+    enabled: true
+    existingClaim: "airflow-pvc-logs"
+
+airflow:
+  extraAnnotations:
+    "prometheus.io/scrape": "true"
+    "prometheus.io/port": "8090"
+
+extraSecrets:
+# Add your airflow-ssh-secret 
+  airflow-ssh-secret:
+    data: |
+      gitSshKey: ''
+# Add your Lufthansa API client id 
+  lufthansa-client-id:
+    data: |
+      CLIENT_ID: ''
+# Add your Lufthansa API secret 
+  lufthansa-client-secret:
+    data: |
+      CLIENT_SECRET: ''
+  mongodb-root-password:
+    data: |
+      MONGODB_ROOT_PASSWORD: 'cGFzc3dvcmQxMjM='
+  mysql-root-password:
+    data: |
+      MYSQL_ROOT_PASSWORD: 'cm9vdHBhc3N3b3JkMTIz'
+
+secret:
+  - envName: "CLIENT_ID"
+    secretName: "lufthansa-client-id"
+    secretKey: "CLIENT_ID"
+  - envName: "CLIENT_SECRET"
+    secretName: "lufthansa-client-secret"
+    secretKey: "CLIENT_SECRET"
+  - envName: "MONGODB_ROOT_PASSWORD"
+    secretName: "mongodb-root-password"
+    secretKey: "MONGODB_ROOT_PASSWORD"
+  - envName: "MYSQL_ROOT_PASSWORD"
+    secretName: "mysql-root-password"
+    secretKey: "MYSQL_ROOT_PASSWORD"
+
+env:
+  - name: "URL_API_LUFTHANSA"
+    value: "https://api.lufthansa.com/v1"
+  - name: "URL_API_OPEN_METEO"
+    value: "https://api.open-meteo.com/v1/forecast"
+  - name: "IPFY_URL"
+    value: "https://api.ipify.org?format=json"
+  - name: AIRFLOW__API__AUTH_BACKENDS
+    value: "airflow.api.auth.backend.basic_auth,airflow.api.auth.backend.session"
+  - name: MONGODB_HOST
+    value: "mongo-db"
+  - name: MONGODB_PORT
+    value: "27017"
+  - name: MONGODB_DATABASE
+    value: "DST_AIRLINES"
+  - name: MONGODB_COLLECTION
+    value: "FlightStatusResource"
+  - name: MONGODB_USER
+    value: "admin"
+  - name: MYSQL_HOST
+    value: "mysql-db"
+  - name: MYSQL_PORT
+    value: "3306"
+  - name: MYSQL_DATABASE
+    value: "DST_AIRLINES"
+  - name: MYSQL_USER
+    value: "root"

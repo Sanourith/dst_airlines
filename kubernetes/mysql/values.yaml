@@ -1,0 +1,27 @@
+replicaCount: 1
+
+image:
+  repository: mysql
+  tag: "8.0"
+  pullPolicy: IfNotPresent
+
+mysql:
+  database: DST_AIRLINES
+
+service:
+  name: mysql-db
+  type: ClusterIP
+  port: 3306
+
+persistence:
+  enabled: true
+  size: 2Gi
+  storageClass: local-path
+
+resources:
+  requests:
+    memory: "512Mi"
+    cpu: "250m"
+  limits:
+    memory: "1Gi"
+    cpu: "500m"

@@ -1,0 +1,27 @@
+replicaCount: 1
+image: glampe/dst_airlines_fastapi:0.1.3
+service:
+  name: fastapi-service
+  port: 80
+  targetPort: 8000
+  type: NodePort
+
+env:
+  host: db
+  user: admin
+  password: password
+  dbName: storedb
+
+tls:
+  secretName: rancher-secret
+  hosts: fastapi.dst-airlines.dns-dynamic.net
+
+hpa:
+  minReplicas: 2
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 70
+
+
+serviceAccount:
+  create: false

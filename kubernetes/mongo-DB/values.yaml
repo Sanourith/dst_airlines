@@ -1,0 +1,26 @@
+replicaCount: 1
+
+image:
+  repository: mongo
+  tag: "4.4.6"
+  pullPolicy: IfNotPresent
+
+mongodb:
+  mongodbDatabase: DST_AIRLINES
+
+service:
+  name: mongo-db
+  type: ClusterIP
+  port: 27017
+
+persistence:
+  size: "1Gi"
+  storageClass: "local-path"
+
+resources:
+  requests:
+    memory: "256Mi"
+    cpu: "100m"
+  limits:
+    memory: "512Mi"
+    cpu: "200m"
