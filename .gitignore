@@ -143,6 +143,7 @@ celerybeat.pid
 # uniquement les variables d'environnement privées
 private.env 
 .venv
+venv_airlines/
 # env/
 venv/
 env/
