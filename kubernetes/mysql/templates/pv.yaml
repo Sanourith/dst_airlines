@@ -9,4 +9,4 @@ spec:
     - ReadWriteOnce
   storageClassName: {{ .Values.persistence.storageClass }}
   hostPath:
-    path: /mnt/data/mysql
+    path: /custom/data/mysql

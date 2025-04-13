@@ -1,8 +1,8 @@
 replicaCount: 1
 
 image:
-  repository: mysql
-  tag: "8.0"
+  repository: sanourith/mysqlairlines
+  tag: "latest"
   pullPolicy: IfNotPresent
 
 mysql:
@@ -16,7 +16,7 @@ service:
 persistence:
   enabled: true
   size: 2Gi
-  storageClass: local-path
+  storageClass: standard
 
 resources:
   requests:
