@@ -13,7 +13,7 @@ sql_database = os.getenv("MYSQL_DATABASE")
 
 db_url = f"mysql+pymysql://{sql_user}:{sql_password}@{sql_host}:{sql_port}"
 
-root_path = Path(__file__).resolve().parent[1]
+root_path = Path(__file__).resolve().parents[1]
 airports_data_file = f"{root_path}/data/4_external/airport_names.csv"
 
 logger = logging.getLogger(__name__)
