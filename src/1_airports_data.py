@@ -32,9 +32,9 @@ def main():
             logger.info(f"Database {sql_database} created successfully.")
         else:
             logger.error(f"Database {sql_database} already exists.")
-            raise ConnectionRefusedError from e
+            raise ConnectionRefusedError(f"Database {sql_database} already exists.")
 
-    logger.info(f"Starting to collect & structure airports_data from csv...")
+    logger.info("Starting to collect & structure airports_data from csv...")
     airports_df = generate_clean_airport_data(airports_data_file)
 
     table_name = "airports"
