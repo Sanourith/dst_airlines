@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-init-scripts
+  namespace: airlines
+data:
+  create_dst_airlines_database.sql: |
+    {{- .Files.Get "create_dst_airlines_database.sql" | indent 4 }}
+
+  create_dst_airlines_users.sql: |
+    {{- .Files.Get "create_dst_airlines_users.sql" | indent 4 }}

@@ -10,7 +10,7 @@ mysql:
 
 service:
   name: mysql-db
-  type: ClusterIP
+  type: NodePort
   port: 3306
 
 persistence:
