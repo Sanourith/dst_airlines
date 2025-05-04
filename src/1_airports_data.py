@@ -6,9 +6,9 @@ import logging
 from dst_airlines.database import mysql
 from dst_airlines.data.airports import generate_clean_airport_data
 
-main_path = os.path.dirname(os.path.abspath(__file__))
+script_path = os.path.dirname(os.path.abspath(__file__))
 
-env_file = os.path.join(main_path, "../env/private.env")
+env_file = os.path.join(script_path, "../env/private.env")
 load_dotenv(env_file)
 
 sql_user = os.getenv("MYSQL_USER")
