@@ -15,11 +15,11 @@ from typing import List
 logger = logging.getLogger(__name__)
 
 
-def test(string = "un deux un deux test") -> None:
+def test(string="un deux un deux test") -> None:
     script_dir = os.path.dirname(os.path.abspath(__file__))
     print(f"{__file__ = }")
     print(f"{script_dir = }")
-    print(f'{string = }')
+    print(f"{string = }")
 
 
 def test_logging():
@@ -37,10 +37,10 @@ def test_logging():
         logger.exception("exception message")
 
 
-def load_env_variables(public_env_path: str=None, private_env_path: str=None) -> None:
-    """Load environment variables declared into two files "public.env" (for public env. var. which can be shared) 
+def load_env_variables(public_env_path: str = None, private_env_path: str = None) -> None:
+    """Load environment variables declared into two files "public.env" (for public env. var. which can be shared)
     and "private.env" (for private env. var. which should not be shared), both stored in the folder "env" located
-    in the "env" folder at the project root  
+    in the "env" folder at the project root
 
     To get the env. variable : `os.getenv("VAR_NAME")`
 
@@ -49,15 +49,19 @@ def load_env_variables(public_env_path: str=None, private_env_path: str=None) ->
         private_env_path (str, optional): Path to the private environment variables. Defaults to None.
     """
     project_root = get_project_root_path()
-    
-    public_env_path = public_env_path if public_env_path else os.path.join(project_root, "env", "public.env")
-    private_env_path = private_env_path if private_env_path else os.path.join(project_root, "env", "private.env")
-    
+
+    public_env_path = (
+        public_env_path if public_env_path else os.path.join(project_root, "env", "public.env")
+    )
+    private_env_path = (
+        private_env_path if private_env_path else os.path.join(project_root, "env", "private.env")
+    )
+
     load_dotenv(dotenv_path=public_env_path)
     load_dotenv(dotenv_path=private_env_path)
 
-    logger.info(f'Variables publiques chargées depuis : {public_env_path}')
-    logger.info(f'Variables privées chargées depuis : {private_env_path}')
+    logger.info(f"Variables publiques chargées depuis : {public_env_path}")
+    logger.info(f"Variables privées chargées depuis : {private_env_path}")
 
 
 def get_project_root_path() -> str:
@@ -78,7 +82,7 @@ def store_json_file(file_path: str, data: object) -> None:
         file_path (str): Path where to store the data
         data (object): Data to be stored
     """
-    with open(file_path, 'w') as json_file:
+    with open(file_path, "w") as json_file:
         json.dump(data, json_file, indent=4)
         logger.info(f"Données enregistrées dans '{file_path}'.")
 
@@ -93,7 +97,7 @@ def retrieve_json(file_path: str) -> dict | list:
         dict | list: Dict or list of dicts stored into the JSON
     """
     try:
-        with open(file_path, 'r') as f:
+        with open(file_path, "r") as f:
             flight_data = json.load(f)
     except FileNotFoundError:
         logger.exception(f"Le fichier {f} n'a pas été trouvé.")
@@ -116,19 +120,25 @@ def build_data_storage_path(file_name: str, data_stage: str, folder: str = "") -
     Returns:
         str: _description_
     """
-    data_paths = {"raw": "1_raw",
-                  "interim": "2_interim",
-                  "processed": "3_processed",
-                  "external": "4_external"}
-    
+    data_paths = {
+        "raw": "1_raw",
+        "interim": "2_interim",
+        "processed": "3_processed",
+        "external": "4_external",
+    }
+
     if data_stage in data_paths:
         complete_data_stage = data_paths[data_stage]
     else:
-        logger.error(f"Le stage '{data_stage}' n'est pas dans la liste des possibilités : {data_paths.keys}.")
-        raise ValueError(f"Le stage '{data_stage}' n'est pas dans la liste des possibilités : {data_paths.keys}.")        
+        logger.error(
+            f"Le stage '{data_stage}' n'est pas dans la liste des possibilités : {data_paths.keys}."
+        )
+        raise ValueError(
+            f"Le stage '{data_stage}' n'est pas dans la liste des possibilités : {data_paths.keys}."
+        )
 
     project_root = get_project_root_path()
-    path = os.path.join(project_root, 'data', complete_data_stage, folder)
+    path = os.path.join(project_root, "data", complete_data_stage, folder)
 
     if not os.path.exists(path):
         logger.error(f"Le chemin '{path}' n'existe pas sur votre machine.")
@@ -155,16 +165,17 @@ def get_public_ip_address() -> str:
     Returns:
         str: Your public IP
     """
-    ipfy_url = os.getenv("IPFY_URL")
+    ipfy_url = "https://api.ipify.org?format=json"
+
     try:
         response = requests.get(ipfy_url)
         ip_info = response.json()
-        public_ip = ip_info['ip']
+        public_ip = ip_info["ip"]
         return public_ip
     except requests.RequestException:
         logger.exception("Erreur de récupération de l'adresse IP")
         return None
-    
+
 
 def build_lh_api_headers(api_token: str, public_ip: str) -> dict:
     """Build the Lufthansa API headers via the given API token & public IP
@@ -176,14 +187,11 @@ def build_lh_api_headers(api_token: str, public_ip: str) -> dict:
     Returns:
         dict: The Lufthansa API headers
     """
-    headers = {
-        'Authorization': f'Bearer {api_token}',
-        'X-originating-IP': public_ip
-    }
+    headers = {"Authorization": f"Bearer {api_token}", "X-originating-IP": public_ip}
     return headers
 
 
-def get_lh_api_token(client_id: str="", client_secret: str="") -> str:
+def get_lh_api_token(client_id: str = "", client_secret: str = "") -> str:
     """Get Lufthansa API token for the given client ID and secret (will retrieve the one in the environment variables by default)
 
     Args:
@@ -197,11 +205,13 @@ def get_lh_api_token(client_id: str="", client_secret: str="") -> str:
     client_secret = os.getenv("CLIENT_SECRET") if client_secret == "" else client_secret
     lh_api = os.getenv("URL_API_LUFTHANSA")
 
-    get_cred_request = {"client_id": client_id,
-             "client_secret": client_secret,
-             "grant_type": "client_credentials"}
+    get_cred_request = {
+        "client_id": client_id,
+        "client_secret": client_secret,
+        "grant_type": "client_credentials",
+    }
 
-    url = f'{lh_api}/oauth/token'
+    url = f"{lh_api}/oauth/token"
 
     r = requests.post(url=url, data=get_cred_request)
     logger.info(f"Code de réponse suite à la demande d'un nouveau token : {r.status_code}")
@@ -218,5 +228,7 @@ def get_files_in_folder(folder_path: str) -> List[str]:
     Returns:
         List[str]: List of the files within the given folder
     """
-    files = [file for file in os.listdir(folder_path) if os.path.isfile(os.path.join(folder_path, file))]
+    files = [
+        file for file in os.listdir(folder_path) if os.path.isfile(os.path.join(folder_path, file))
+    ]
     return files
